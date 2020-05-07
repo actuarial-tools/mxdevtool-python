@@ -4,7 +4,6 @@ MxDevTool(Beta) : Financial Library
 ![image](https://img.shields.io/badge/Platform-Windows-Green.svg)
 ![image](https://img.shields.io/badge/python-3.6|3.7|3.8-blue)
 
-
 MxDevTool is a Integrated Developing Tools for financial analysis. 
 Now is Beta Release version. The Engine is developed by C++. 
 
