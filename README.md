@@ -19,9 +19,8 @@ Functionalty :
 -   Moment-Matching Process
 -   InterestRateSwap Pricing
 -   Option Pricing
+-   Fast Calculation
 
-
-Requests officially supports Python 3.6–3.8
 
 Quick start
 -----------
