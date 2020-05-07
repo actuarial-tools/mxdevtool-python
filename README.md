@@ -60,7 +60,7 @@ License
 This mxdevtool-python project is licensed under MIT. But MxDevTool is following.
 
 MxDevTool(non-commercial version) is free for non-commercial purposes. 
-This is licensed under the terms of the Montrix Non-Commercial License(see the file LICENSE).
+This is licensed under the terms of the [Montrix Non-Commercial License](https://www.montrix.co.kr/mxdevtool/license).
 
 Please contact us for the commercial purpose. <master@montrix.co.kr>
 
