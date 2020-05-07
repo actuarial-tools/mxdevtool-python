@@ -21,7 +21,7 @@ Functionalty :
 -   Option Pricing
 
 
-Requests officially supports Python 3.5–3.7
+Requests officially supports Python 3.6–3.8
 
 Quick start
 -----------
