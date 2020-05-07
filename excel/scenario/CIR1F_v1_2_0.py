@@ -11,7 +11,7 @@ filename = 'D:/mxdevtool_results/test_cir1f.npz'
 def test():
 	print('cir1f test...', filename)
 
-	ref_date = mx.Date(2018, 9, 9)
+	ref_date = mx.Date(2018, 10, 10)
 
 	initialValue = 0.02
 	meanReverting = 0.1
@@ -40,6 +40,9 @@ def test():
 	scen = mx.ScenarioGenerator(models, corrMatrix, timeGrid, rsg, False, filename, False)
 
 	scen.generate()
+
+	results = mx.ScenarioResult(filename)
+	print(results.multiPath(scenCount=10))
 
 if __name__ == "__main__":
 	

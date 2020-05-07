@@ -1,15 +1,16 @@
-# python script for CCP_SwapCurve_v1_1_2.xlsm file
+# python script for CCP_SwapCurve_v1_2_0.xlsm file
 # excel link : https://blog.naver.com/montrix/221396471087
-# python link : https://blog.naver.com/montrix/***********
 
 import mxdevtool as mx
 
 def test():
-    print('ccp swapcurve test...')
+    #calendar = mx.SouthKorea()
+    calendar = mx.Calendar('kr')
 
-    #calendar = mx.NullCalendar()
-    ref_date = mx.Date(2020, 1, 19)
-    mx.Settings.instance().setEvaluationDate(ref_date)
+    daycounter = mx.Actual365Fixed()
+    ref_date = mx.Date(2020, 1, 9)
+    effective_date = calendar.advance(ref_date, '1D')
+    #mx.Settings.instance().setEvaluationDate(ref_date)
 
     # ref_date
     marketQuotes = [('1D','Cash',0.012779015127),
@@ -47,9 +48,17 @@ def test():
     forSettlement = True
 
     yield_curve = mx.BootstapSwapCurveCCP(ref_date, swap_quote_tenors, swap_quote_types, swap_quote_values, interpolator1DType, extrapolation, family_name, forSettlement)
+    
+    for q in marketQuotes:
+        tenor = q[0]
+        swap_rate = q[2]
+        # period = mx.Period(tenor)
+        # d = calendar.advance(ref_date, period)
+        # print(d)
+        zero = yield_curve.zeroRate(calendar.advance(effective_date, tenor) ,daycounter, mx.Continuous)
+        discount = yield_curve.discount(calendar.advance(effective_date, tenor))
 
-    print(yield_curve.zeroRate(7.2, mx.Compounded).rate())
-
+        print(tenor, swap_rate, zero.rate(), discount)
 
 if __name__ == "__main__":
     test()

@@ -62,6 +62,9 @@ def test():
     scen = mx.ScenarioGenerator(models, corrMatrix, timeGrid, rsg, False, filename, False)
     scen.generate()
 
+	results = mx.ScenarioResult(filename)
+	print(results.multiPath(scenCount=10))
+    
 if __name__ == "__main__":
     
     test()

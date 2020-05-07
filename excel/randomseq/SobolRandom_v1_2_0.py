@@ -1,6 +1,5 @@
 # python script for SobolRandom_v1_2_0.xlsm file
 # excel link : https://blog.naver.com/montrix/221371425358
-# python link : https://blog.naver.com/montrix/***********
 
 import mxdevtool as mx
 

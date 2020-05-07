@@ -74,7 +74,9 @@ def test():
 
     scen.generate()
 
-
+	results = mx.ScenarioResult(filename)
+	print(results.multiPath(scenCount=10))
+    
 if __name__ == "__main__":
     
     test()
