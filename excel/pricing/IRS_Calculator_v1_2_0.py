@@ -1,6 +1,5 @@
-# python script for BK1F_v1_2_0.xlsm file
-# excel link : https://blog.naver.com/montrix/221376083438
-# python link : https://blog.naver.com/montrix/***********
+# python script for IRS_Calculator_v1_2_0.xlsm file
+# excel link : https://blog.naver.com/montrix/221853410218
 
 import mxdevtool as mx
 
