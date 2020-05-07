@@ -56,7 +56,7 @@ You can download Npzee Viewer in [WindowStore](https://www.microsoft.com/store/a
 License
 -------
 
-this mxdevtool-python project is licensed under MIT. But MxDevTool is following.
+This mxdevtool-python project is licensed under MIT. But MxDevTool is following.
 
 MxDevTool(non-commercial version) is free for non-commercial purposes. 
 This is licensed under the terms of the Montrix Non-Commercial License(see the file LICENSE).
