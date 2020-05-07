@@ -1,4 +1,4 @@
-MxdevTool(Beta) : Financial Library
+MxDevTool(Beta) : Financial Library
 ==========================
 
 ![image](https://img.shields.io/badge/Platform-Windows-Green.svg)
