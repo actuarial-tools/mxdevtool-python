@@ -6,7 +6,7 @@ import sys, os
 import mxdevtool as mx
 import numpy as np
 
-filename = 'D:/mxdevtool_results/test_gbmconst.npz'
+filename = 'D:/test_gbmconst.npz'
 
 def test():
 	print('gbmconst test...', filename)
@@ -41,7 +41,6 @@ def test():
 	scen = mx.ScenarioGenerator(models, corrMatrix, timeGrid, rsg, False, filename, False)
 
 	scen.generate()
-
 	results = mx.ScenarioResult(filename)
 	print(results.multiPath(scenCount=10))
 

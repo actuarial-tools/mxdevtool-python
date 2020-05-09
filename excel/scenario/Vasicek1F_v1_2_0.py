@@ -6,12 +6,13 @@ import sys, os
 import mxdevtool as mx
 import numpy as np
 
-filename = 'D:/mxdevtool_results/test_vasicek1f.npz'
+filename = 'D:/test_vasicek1f.npz'
 
 def test():
 	print('vasicek1f test...', filename)
 	
 	ref_date = mx.Date(2018, 9, 9)
+	
 
 	initialValue = 0.02
 	meanReverting = 0.1
@@ -39,9 +40,7 @@ def test():
 				randomType, subType, randomTransformType)
 				
 	scen = mx.ScenarioGenerator(models, corrMatrix, timeGrid, rsg, False, filename, False)
-
 	scen.generate()
-
 	results = mx.ScenarioResult(filename)
 	print(results.multiPath(scenCount=10))
 	
