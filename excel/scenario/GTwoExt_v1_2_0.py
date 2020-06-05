@@ -6,7 +6,7 @@ import sys, os
 import mxdevtool as mx
 import numpy as np
 
-filename = 'D:/mxdevtool_results/test_gtwoext.npz'
+filename = 'D:/test_gtwoext.npz'
 
 def test():
     print('gtwoext test...', filename)
@@ -67,9 +67,8 @@ def test():
     scen = mx.ScenarioGenerator(models, corrMatrix, timeGrid, rsg, False, filename, False)
 
     scen.generate()
-	
     results = mx.ScenarioResult(filename)
-	print(results.multiPath(scenCount=10))
+    print(results.multiPath(scenCount=10))
 
 if __name__ == "__main__":
     

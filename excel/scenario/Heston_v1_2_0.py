@@ -6,7 +6,7 @@ import sys, os
 import mxdevtool as mx
 import numpy as np
 
-filename = 'D:/mxdevtool_results/test_heston.npz'
+filename = 'D:/test_heston.npz'
 
 def test():
     print('heston test...', filename)
@@ -73,9 +73,8 @@ def test():
     scen = mx.ScenarioGenerator(models, corrMatrix, timeGrid, rsg, False, filename, False)
 
     scen.generate()
-
-	results = mx.ScenarioResult(filename)
-	print(results.multiPath(scenCount=10))
+    results = mx.ScenarioResult(filename)
+    print(results.multiPath(scenCount=10))
     
 if __name__ == "__main__":
     

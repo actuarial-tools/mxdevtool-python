@@ -6,7 +6,7 @@ import sys, os
 import mxdevtool as mx
 import numpy as np
 
-filename = 'D:/mxdevtool_results/test_cir1f.npz'
+filename = 'D:/test_cir1f.npz'
 
 def test():
 	print('cir1f test...', filename)
