@@ -14,8 +14,8 @@ def test():
     r = 0.02
     div = 0.0
     vol = 0.16
-    maturityDate = mx.Date(2020,6,15)
-    exDates = [ mx.Date(2020,5,15), mx.Date(2020,6,15)]
+    maturityDate = mx.Date(2020,8,15)
+    exDates = [ mx.Date(2020,8,15), mx.Date(2020,9,15)]
 
     european_option = mx.EuropeanOption(mx.Option.Call, s0, strike, r, div, vol, maturityDate)
     american_option = mx.AmericanOption(mx.Option.Call, s0, strike, r, div, vol, maturityDate)
@@ -36,6 +36,7 @@ def test():
         print('vega  :', option.vega())
         print('theta :', option.thetaPerDay())
         print('rho   :', option.rho())
+        print('div_rho   :', option.dividendRho())
         print('impliedVolatility   :', option.impliedVolatility(9.2))
 
     #option1.imvol(1.2)
