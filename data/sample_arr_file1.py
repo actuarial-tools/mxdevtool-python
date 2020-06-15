@@ -34,17 +34,20 @@ arr_type_int64 = np.zeros(2*3*1000, dtype=np.int64)
 i=0
 for v in range(len(arr_type_int8)):
     arr_type_int8[v] = i
+    if i == 128 :
+        print(arr_type_int8[v], i, v)
     i+=1
+    
 
 arr_type_int8 = np.reshape(arr_type_int8, (2,3,1000))
 
-print(arr_type_int8.dtype, arr_type_int8.shape)
+#print(arr_type_int8.dtype, arr_type_int8.shape)
 
 data_arr = [x, arr, arr1, arr2, arr3, arr_type_int8]
 data_dict = {"x":x, "arr":arr, "arr1":arr1, "arr2":arr2, "arr3":arr3, "arr_type_int8":arr_type_int8}
 
 save_data('sample_arr_file1_arr', arr, 'npy')
-save_data('sample_arr_file1_arr4', arr_type_int8, 'npy')
+save_data('sample_arr_file1_arr_type_int8', arr_type_int8, 'npy')
 save_data('sample_arr_file1_simple_array', x, 'npy')
 save_data('sample_arr_file1_simple_object_pickle', x_obj, 'npy')
 save_data('sample_arr_file1_array_parameter', data_arr, 'npy')
@@ -65,3 +68,11 @@ save_data('pickle_arr_arr_type_int8', arr_type_int8, 'pkl')
 
 np.savez('./data/files/sample_arr_file1_z2_params', x=x, arr=arr, arr1=arr1, arr2=arr2, arr3=arr3, arr_type_int8=arr_type_int8)
 np.savez_compressed('./data/files/sample_arr_file1_z_comp2_params',x=x, arr=arr, arr1=arr1, arr2=arr2, arr3=arr3, arr_type_int8=arr_type_int8)
+
+# 
+
+
+# print(arr_type_int8[0][0][129])
+# d = np.load('./data/files/sample_arr_file1_z_comp2_params.npz')
+
+# print(d.files)
