@@ -37,3 +37,11 @@ for typ in dtypes:
 
 np.savez('./data/files/sample_dtypes', *data_arr)
 
+npz = np.load('./data/files/sample_dtypes.npz')
+
+print(isinstance(npz, np.lib.npyio.NpzFile))
+
+print(npz.files)
+
+for f in npz:
+    print(npz[f].shape)
