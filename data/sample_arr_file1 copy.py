@@ -35,7 +35,13 @@ for typ in dtypes:
     arr = np.reshape(arr, shape)
     data_arr.append(arr)
 
-np.savez('./data/files/sample_dtypes', *data_arr)
+np.savez('./data/files/sample_dtypes_with_star', *data_arr)
+
+arr_small = np.random.rand(5200, 10)
+np.savez('./data/files/sample_dtypes_test_filter_small', arr_small=arr_small)
+
+arr_large = np.random.rand(1200000, 50)
+np.savez('./data/files/sample_dtypes_test_filter_large', arr_large=arr_large)
 
 npz = np.load('./data/files/sample_dtypes.npz')
 
