@@ -6,15 +6,23 @@ import sys, os
 import mxdevtool as mx
 import numpy as np
 
-filename = 'D:/test_multiplemodels.npz'
+filename = 'D:/test_stepdown.npz'
 
 
 class StepDownPayoff:
 	def __init__(self, notional, issue_date, maturity_date, initial_values, ki, ki_flag, coupons):
 		pass
 
-	def payoff(self, path, discount):
-		pass
+	def value(self, multi_path, discount):
+		min_s = min(multi_path[0], multi_path[1])
+
+		for cpn in self.coupons:
+			if min_s >= cpn.level:
+				return cpn.rate
+		
+		
+
+		return 1
 
 
 class ScenarioValuationModel:
@@ -46,9 +54,9 @@ def build_stepdown():
 
 
 def build_scenario():
-	print('multiplemodels test...', filename)
+	print('stepdown test...', filename)
 	
-	ref_date = mx.Date(2018, 9, 9)
+	ref_date = mx.Date(2012,8,22)
 
 	initialValue = 10000
 	riskFree = 0.032
@@ -81,32 +89,30 @@ def build_scenario():
 	scen.generate()
 	
 	results = mx.ScenarioResult(filename)
-	print(results.multiPath(scenCount=10))
-
+	#print(results.multiPath(scenCount=10))
 	
 		
 def pricing():
+	results = mx.ScenarioResult(filename)
+
 	payoff = build_stepdown()
-	
+	simulNum = results.simulNum()
+	refDate = mx.Date(2012,8,22)
+	discount_curve = mx.FlatForward(refDate, 0.0307, mx.Actual365Fixed())
+
 	v = 0
 
-	for i in range(scenario_num):
+	for i in range(simulNum):
 		path = results.multiPath(i)
-		v += payoff(path)
 
-	# 해야할일은, stepdown product의 계산을 수행 함. - 이건 built-in으로 해도 될만큼 보편적이긴한데
-	# 확장성을 위해서 scenario만들어서 pricing 하는 방식으로 함.
-	# 우선 비교를 위해 예전에 했던 pricing 엑셀을 토대로 작성함. - 값이 비슷하게 나오면 성공.
-	# greeks들 까지 어떻게 pricing을 하는지 틀을 잡아놔야함. 시나리오 생성만 되었으니까....
-	# 우선 그 파일을 찾자.
-	# 근데 이게 완성되었다고 해서, 어디다가 팔수 있는건 아니고, 응용할 만큼 예제가 많아야하는데, 작업량이
-	# 적지 않을 듯하다.
-	# 한번 만들어보면 느낌이 오겠지. 오늘 한시간정도 시간이 있으니까... 우선 한번 ㄱㄱ 생각만 하던거니까...
-	# dev_stepdown start
+		v += payoff.value(path, discount_curve)
 
-	
+	print('value : ', v)
+
+
 if __name__ == "__main__":
 	
-	build_scenario()
+	# build_scenario()
+	pricing()
 
 	#mx.npzee_view(filename)
