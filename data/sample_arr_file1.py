@@ -31,35 +31,22 @@ arr_type_int32 = np.zeros(2*3*100000*15, dtype=np.int32)
 arr_type_int64 = np.zeros(2*3*1000, dtype=np.int64)
 
 i=0
-<<<<<<< HEAD
-for v in range(len(arr_type_int32)):
-    arr_type_int32[v] = i
-=======
 for v in range(len(arr_type_int8)):
     arr_type_int8[v] = i
     if i == 128 :
         print(arr_type_int8[v], i, v)
->>>>>>> 44cfac8bfd1fb055ce51c21aa2bdef4101d9a55d
     i+=1
     
 
 arr_type_int32 = np.reshape(arr_type_int32, (2*3*100000, 15))
 
-<<<<<<< HEAD
-print(arr_type_int32.dtype, arr_type_int32.shape)
-=======
 #print(arr_type_int8.dtype, arr_type_int8.shape)
->>>>>>> 44cfac8bfd1fb055ce51c21aa2bdef4101d9a55d
 
 data_arr = [x, arr, arr1, arr2, arr3, arr_type_int32]
 data_dict = {"x":x, "arr":arr, "arr1":arr1, "arr2":arr2, "arr3":arr3, "arr_type_int32":arr_type_int32}
 
 save_data('sample_arr_file1_arr', arr, 'npy')
-<<<<<<< HEAD
-save_data('sample_arr_file1_arr4', arr_type_int32, 'npy')
-=======
 save_data('sample_arr_file1_arr_type_int8', arr_type_int8, 'npy')
->>>>>>> 44cfac8bfd1fb055ce51c21aa2bdef4101d9a55d
 save_data('sample_arr_file1_simple_array', x, 'npy')
 save_data('sample_arr_file1_simple_object_pickle', x_obj, 'npy')
 save_data('arr_type_int32_for_performance_check', arr_type_int32, 'npy')
