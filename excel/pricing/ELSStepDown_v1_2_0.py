@@ -1,36 +1,91 @@
-# python script for MultipleModels_v1_2_0.xlsm file
+# python script for StepDown_v1_2_0.xlsm file
 # excel link : https://blog.naver.com/montrix/221361343611
 # python link : https://blog.naver.com/montrix/***********
 
-import sys, os
-import mxdevtool as mx
 import numpy as np
+import mxdevtool as mx
 
 filename = 'D:/test_stepdown.npz'
-
+refDate = mx.Date(2012,8,22)
+riskFree = 0.0307
 
 class StepDownPayoff:
 	def __init__(self, notional, issue_date, maturity_date, initial_values, ki, ki_flag, coupons):
-		pass
+		self.notional = notional
+		self.issue_date = issue_date
+		self.maturity_date = maturity_date
+		self.initial_values = initial_values
+		self.ki = ki
+		self.ki_flag = ki_flag
+		self.coupons = coupons
 
-	def value(self, multi_path, discount):
-		min_s = min(multi_path[0], multi_path[1])
+		# t_pos for calculation
+		self.coupon_tpos = []
+		self.discount_factors = []
+
+	def initialize_timeGrid(self, timeGrid):
+		if not isinstance(timeGrid, mx.TimeGrid):
+			return
 
 		for cpn in self.coupons:
-			if min_s >= cpn.level:
-				return cpn.rate
+			d = cpn[0]
+			t_pos = timeGrid.closestIndex_Date(d)
+			self.coupon_tpos.append(t_pos)
+
+	def precalculation_discountFactors(self, discountCurve):
+		if not isinstance(discountCurve, mx.YieldTermStructure):
+			return
+
+		if len(self.discount_factors) > 0:
+			return
+
+		for cpn in self.coupons:
+			d = cpn[0]
+			self.discount_factors.append(discountCurve.discount(d))
+
+	def get_min_return(self, multi_path, t_pos):
+		min_return = 1.0
 		
-		
+		for i, initial_value in enumerate(self.initial_values):
+			min_return = min(min_return, multi_path[i][t_pos] / initial_value)
 
-		return 1
+		return min_return
 
+	def check_ki(self, multi_path):
+		if self.ki_flag:
+			return True
 
-class ScenarioValuationModel:
-	def __init__(self):
-		pass
+		for i, initial_value in enumerate(self.initial_values):
+			min_return = np.min(np.array(multi_path[i]) / initial_value)
+			if min_return <= self.ki:
+				return True
 
-	def value(self):
-		pass
+		return False
+
+	def value(self, multi_path, discount):
+		self.precalculation_discountFactors(discount)
+
+		for cpn, t_pos, disc in zip(self.coupons[:-1], self.coupon_tpos[:-1], self.discount_factors[:-1]):
+			min_return = self.get_min_return(multi_path, t_pos)
+			ex_level = cpn[1]
+			if min_return >= ex_level: # early exercise
+				rate = cpn[2]
+				return self.notional * (1.0 + rate) * disc
+
+		last_cpn = self.coupons[-1]
+		last_t_pos = self.coupon_tpos[-1]
+		last_disc = self.discount_factors[-1]
+
+		min_return = self.get_min_return(multi_path, last_t_pos)
+
+		if min_return >= last_cpn[1]: # last exercise
+			return self.notional * (1.0 + last_cpn[2]) * last_disc
+		else:
+			if self.check_ki(multi_path):
+				return self.notional * min_return * last_disc
+			else:
+				return self.notional * (1.0 + last_cpn[2]) * last_disc
+
 
 
 def build_stepdown():
@@ -53,26 +108,27 @@ def build_stepdown():
 	return StepDownPayoff(notional, issue_date, maturity_date, initial_values, ki, ki_flag, coupons)
 
 
-def build_scenario():
+def build_scenario(overwrite=True):
 	print('stepdown test...', filename)
+
+	if not overwrite:
+		return
+
+	initialValues = [387833, 27450]
+	dividends = [0.0247, 0.0181]
+	volatilities = [0.2809, 0.5795]
+
+	gbmconst1 = mx.GBMConstModel('gbmconst', initialValues[0], riskFree, dividends[0], volatilities[0])
+	gbmconst2 = mx.GBMConstModel('gbmconst', initialValues[1], riskFree, dividends[1], volatilities[1])
 	
-	ref_date = mx.Date(2012,8,22)
-
-	initialValue = 10000
-	riskFree = 0.032
-	dividend = 0.01
-	volatility = 0.15
-
-	gbmconst1 = mx.GBMConstModel('gbmconst', initialValue, riskFree, dividend, volatility)
-	gbmconst2 = mx.GBMConstModel('gbmconst', initialValue, riskFree, dividend, volatility)
 	models = [gbmconst1, gbmconst2]
+	corr = 0.6031
+	corrMatrix = mx.Matrix([[1.0, corr],[corr, 1.0]])
 
-	corrMatrix = mx.Matrix([[1.0, 0.0],[0.0, 1.0]])
-
-	timeGrid = mx.TimeEqualGrid(ref_date, 3, 365)
+	timeGrid = mx.TimeEqualGrid(refDate, 3, 365)
 
 	# random 
-	scenario_num = 5000
+	scenario_num = 30000
 	dimension = (len(timeGrid) - 1)* len(models)
 	seed = 100
 	skip = 0
@@ -96,10 +152,11 @@ def pricing():
 	results = mx.ScenarioResult(filename)
 
 	payoff = build_stepdown()
-	simulNum = results.simulNum()
-	refDate = mx.Date(2012,8,22)
-	discount_curve = mx.FlatForward(refDate, 0.0307, mx.Actual365Fixed())
+	payoff.initialize_timeGrid(results.timeGrid())
 
+	simulNum = results.simulNum()
+	discount_curve = mx.FlatForward(refDate, 0.0307, mx.Actual365Fixed())
+	
 	v = 0
 
 	for i in range(simulNum):
@@ -107,12 +164,16 @@ def pricing():
 
 		v += payoff.value(path, discount_curve)
 
-	print('value : ', v)
+		if i != 0 and i % 5000 == 0:
+			print(i, v / i)
+
+	print(simulNum, v / simulNum)
 
 
 if __name__ == "__main__":
-	
-	# build_scenario()
+	mx.Settings.instance().setEvaluationDate(refDate)
+
+	build_scenario(overwrite=False)
 	pricing()
 
 	#mx.npzee_view(filename)
